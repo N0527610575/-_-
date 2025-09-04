@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תיק העבודות שלנו</title>
+    <style>
+        /* עיצוב כללי */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Assistant', sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #25242A;
+            direction: rtl;
+        }
+        
+        /* כותרת */
+        header {
+            background: linear-gradient(to left, #75B82A, #348B2E);
+            padding: 2rem 1rem;
+            text-align: center;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 300;
+        }
+        
+        /* כפתורי ניווט */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            margin: 2rem auto;
+            max-width: 800px;
+            gap: 1rem;
+            padding: 0 1rem;
+        }
+        
+        .nav-btn {
+            background-color: #F18430;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            max-width: 200px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .nav-btn:hover {
+            background-color: #e07a2b;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .nav-btn.active {
+            background-color: #348B2E;
+        }
+        
+        /* גלריות */
+        .gallery-section {
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .gallery {
+            display: none;
+            margin-top: 2rem;
+        }
+        
+        .gallery.active {
+            display: block;
+        }
+        
+        .gallery-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #348B2E;
+            font-size: 1.8rem;
+        }
+        
+        .gallery-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 1rem 0.5rem;
+            scrollbar-width: thin;
+            -ms-overflow-style: none;
+            scroll-behavior: smooth;
+        }
+        
+        .gallery-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .gallery-container::-webkit-scrollbar-thumb {
+            background: #75B82A;
+            border-radius: 4px;
+        }
+        
+        .project-card {
+            flex: 0 0 auto;
+            width: 300px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .project-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+        
+        .project-info {
+            padding: 1rem;
+        }
+        
+        .project-price {
+            font-weight: bold;
+            color: #F18430;
+            margin-top: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        /* כפתור צף לוואטסאפ */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 25px;
+            left: 25px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .whatsapp-float:hover {
+            background-color: #128C7E;
+            transform: scale(1.1);
+        }
+        
+        /* פופאפ */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .popup-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+        }
+        
+        .popup-title {
+            color: #F18430;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        .popup-text {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #25242A;
+        }
+        
+        .popup-button {
+            background-color: #75B82A;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        
+        .popup-button:hover {
+            background-color: #348B2E;
+        }
+        
+        /* הודעת cookies */
+        .cookies-consent {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #25242A;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            display: none;
+            z-index: 999;
+        }
+        
+        .cookies-button {
+            background-color: #75B82A;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin-right: 1rem;
+            cursor: pointer;
+        }
+        
+        /* רספונסיביות */
+        @media (max-width: 768px) {
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- כותרת -->
+    <header>
+        <h1>תיק העבודות שלנו</h1>
+        <h2>הפרויקטים המובילים שלנו בתחום הדיגיטל</h2>
+    </header>
+    
+    <!-- כפתורי ניווט -->
+    <div class="nav-buttons">
+        <button class="nav-btn active" data-target="websites">אתרים</button>
+        <button class="nav-btn" data-target="apps">אפליקציות</button>
+        <button class="nav-btn" data-target="landing-pages">דפי נחיתה</button>
+    </div>
+    
+    <!-- גלריות -->
+    <section class="gallery-section">
+        <!-- גלריית אתרים -->
+        <div class="gallery active" id="websites">
+            <h3 class="gallery-title">אתרים</h3>
+            <div class="gallery-container">
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <div class="project-info">
+                        <h4>אתר לעסק מקומי</h4>
+                        <p>אתר תדמיתי עם מערכת ניהול תוכן</p>
+                        <div class="project-price">₪2,500</div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <div class="project-info">
+                        <h4>חנות וירטואלית</h4>
+                        <p>חנות מקוונת עם עגלת קניות</p>
+                        <div class="project-price">₪4,800</div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <div class="project-info">
+                        <h4>אתר תדמית</h4>
+                        <p>עיצוב מודרני ומתקדם</p>
+                        <div class="project-price">₪3,200</div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <div class="project-info">
+                        <h4>פורטל עסקי</h4>
+                        <p>אתר עם פונקציונליות מתקדמת</p>
+                        <div class="project-price">₪7,500</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- גלריית אפליקציות -->
+        <div class="gallery" id="apps">
+            <h3 class="gallery-title">אפליקציות</h3>
+            <div class="gallery-container">
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <div class="project-info">
+                        <h4>אפליקציית מזג אוויר</h4>
+                        <p>אפליקציה עם נתונים בזמן אמת</p>
+                        <div class="project-price">₪8,900</div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <div class="project-info">
+                        <h4>אפליקציה חברתית</h4>
+                        <p>פלטפורמה לחיבור בין אנשים</p>
+                        <div class="project-price">₪12,500</div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <div class="project-info">
+                        <h4>אפליקציית כושר</h4>
+                        <p>מעקב אחרי פעילות גופנית</p>
+                        <div class="project-price">₪9,800</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- גלריית דפי נחיתה -->
+        <div class="gallery" id="landing-pages">
+            <h3 class="gallery-title">דפי נחיתה</h3>
+            <div class="gallery-container">
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <div class="project-info">
+                        <h4>דף נחיתה לסטארטאפ</h4>
+                        <p>עיצוב מותאם להמרות גבוהות</p>
+                        <div class="project-price">₪1,800</div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <div class="project-info">
+                        <h4>דף נחיתה לקורס</h4>
+                        <p>דף מכירה עם טופס הרשמה</p>
+                        <div class="project-price">₪2,200</div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <div class="project-info">
+                        <h4>דף נחיתה לאירוע</h4>
+                        <p>דף עם countdown והרשמה</p>
+                        <div class="project-price">₪1,500</div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <div class="project-info">
+                        <h4>דף נחיתה למוצר</h4>
+                        <p>עיצוב מודרני עם וידאו</p>
+                        <div class="project-price">₪2,500</div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <div class="project-info">
+                        <h4>דף נחיתה לשירות</h4>
+                        <p>דף עם טופס צור קשר</p>
+                        <div class="project-price">₪1,900</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- כפתור צף לוואטסאפ -->
+    <a href="https://wa.me/972527610575" class="whatsapp-float" target="_blank">
+        <span>💬</span>
+    </a>
+    
+    <!-- פופאפ מבצע -->
+    <div class="popup-overlay" id="popup">
+        <div class="popup-content">
+            <button class="popup-close">&times;</button>
+            <h3 class="popup-title">מבצע מיוחד!</h3>
+            <p class="popup-text">10 שקל לאתר ראשוני במבצע</p>
+            <button class="popup-button">לפרטים נוספים</button>
+        </div>
+    </div>
+    
+    <!-- הודעת cookies -->
+    <div class="cookies-consent">
+        <p>אנחנו משתמשים בקובצי Cookie כדי לשפר את החוויה שלך באתר. על ידי continued use, you accept our use of cookies.</p>
+        <button class="cookies-button">מאשר</button>
+    </div>
+    
+    <script>
+        // מעבר בין גלריות
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // הסרת מחלקת active מכל הכפתורים
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // הסרת מחלקת active מכל הגלריות
+                document.querySelectorAll('.gallery').forEach(gallery => {
+                    gallery.classList.remove('active');
+                });
+                
+                // הוספת מחלקת active לכפתור הנוכחי
+                button.classList.add('active');
+                
+                // הצגת הגלריה המתאימה
+                const target = button.getAttribute('data-target');
+                document.getElementById(target).classList.add('active');
+            });
+        });
+        
+        // פתיחה וסגירה של הפופאפ
+        setTimeout(() => {
+            document.getElementById('popup').style.display = 'flex';
+        }, 5000);
+        
+        document.querySelector('.popup-close').addEventListener('click', () => {
+            document.getElementById('popup').style.display = 'none';
+        });
+        
+        // סגירת הפופאפ בלחיצה מחוץ לתיבה
+        document.getElementById('popup').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('popup')) {
+                document.getElementById('popup').style.display = 'none';
+            }
+        });
+        
+        // טיפול בהסכמת cookies
+        setTimeout(() => {
+            document.querySelector('.cookies-consent').style.display = 'block';
+        }, 3000);
+        
+        document.querySelector('.cookies-button').addEventListener('click', () => {
+            document.querySelector('.cookies-consent').style.display = 'none';
+        });
+        
+        // הוספת תמונות רקע אקראיות לפרויקטים
+        document.querySelectorAll('.project-image').forEach(image => {
+            const randomId = Math.floor(Math.random() * 1000);
+            image.style.backgroundImage = `url('https://picsum.photos/300/200?random=${randomId}')`;
+        });
+    </script>
+</body>
+</html>
